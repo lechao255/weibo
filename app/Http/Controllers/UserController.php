@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Auth;
 //use App\Http\Requests\SignupInfo;
 
 class UserController extends Controller
@@ -36,6 +37,8 @@ class UserController extends Controller
     		'email' => $request->email,
     		'password' => bcrypt($request->password),
     	]);
+
+    	Auth::login($user);
 
     	// 由于http协议是无状态的，所以Laravel提供了一种用于临时保存用户数据的方法-会话（Session）
     	// flash方法保存的数据只会保留到下个HTTP请求到来之前，然后就会被删除，闪存数据主要用于短期的状态消息
