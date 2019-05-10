@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+//use App\Http\Requests\SignupInfo;
 
 class UserController extends Controller
 {
@@ -24,6 +25,11 @@ class UserController extends Controller
     // 保存用户数据
     public function store(Request $request){
     	$this->validate($request, ['name' => 'required|max:50', 'email' => 'required|email|unique:users|max:255', 'password' => 'required|confirmed|min:6']);
+
+    	// 创建表单请求验证类（SignupInfo）来处理数据验证。
+    	// art make:request SignupInfo  新创建的验证类保存在 app/Http/Requests/ 目录下，将验证规则添加到 rules 方法中，authorize 方法 return true。
+    	// 使用：use App\Http\Requests\SignupInfo 引入，
+    	// 然后 $validated = $request->validated(); 调用
     	
     	$user = User::create([
     		'name' => $request->name,
