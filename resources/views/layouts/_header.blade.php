@@ -8,7 +8,7 @@
 					<a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role='button' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<a href="{{ route('users.show', Auth::user()) }}" class="dropdown-item">个人中心</a>
-						<a href="#" class="dropdown-item">编辑资料</a>
+						<a href="{{ route('users.edit', Auth::user()) }}" class="dropdown-item">编辑资料</a>
 						<div class="dropdown-divider"></div>
 						<a href="#" class="dropdown-item" id="logout">
 							<form action="{{ route('logout') }}" method="POST">
