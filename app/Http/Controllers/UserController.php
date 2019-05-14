@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
+use Mail;
 //use App\Http\Requests\SignupInfo;
 
 class UserController extends Controller
 {
 	public function __construct(){
-		$this->middleware('auth', ['except' => ['show', 'create', 'store', 'index']]);
+		$this->middleware('auth', ['except' => ['show', 'create', 'store', 'index', 'confimEmail']]);
 
 		$this->middleware('guest', ['only' => ['create']]);
 	}
@@ -50,13 +51,17 @@ class UserController extends Controller
     		'password' => bcrypt($request->password),
     	]);
 
-    	Auth::login($user);
+    	//Auth::login($user);
 
     	// 由于http协议是无状态的，所以Laravel提供了一种用于临时保存用户数据的方法-会话（Session）
     	// flash方法保存的数据只会保留到下个HTTP请求到来之前，然后就会被删除，闪存数据主要用于短期的状态消息
-    	session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
+    	//session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
+		//return redirect()->route('users.show', [$user]);
 
-    	return redirect()->route('users.show', [$user]);
+    	// 加入邮件激活
+    	$this->sendEmailConfirmationTo($user);
+    	session()->flash('success', '验证邮件已发送到您的注册邮箱，请注意查收。');
+    	return redirect('/');
     }
 
     // 编辑用户信息页面
@@ -89,5 +94,32 @@ class UserController extends Controller
     	$user->delete();
     	session()->flash('success', '成功删除用户！');
     	return back();
+    }
+
+    // 注册成功时发送用户激活邮件
+    public function sendEmailConfirmationTo($user){
+    	$view = 'emails.confirm';
+    	$data = compact('user');
+    	$from = 'admin@qq.com';
+    	$name = 'admin';
+    	$to = $user->email;
+    	$subject = "感谢注册 Weibo 应用！请确认您的邮箱。";
+
+    	Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
+    		$message->from($from, $name)->to($to)->subject($subject);
+    	});
+    }
+
+    // 激活账号
+    public function confimEmail($token){
+    	$user = User::where('activation_token', $token)->firstOrFail();
+
+    	$user->activated = true;
+    	$user->activation_token = null;
+    	$user->save();
+
+    	Auth::login($user);
+    	session()->flash('success', '恭喜您，激活成功！');
+    	return redirect()->route('users.show', [$user]);
     }
 }
