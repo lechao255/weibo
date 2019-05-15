@@ -5,6 +5,10 @@
 @section('content')
 	<div class="offset-md-2 col-md-8">
 		<div class="card">
+			<div class="card-header">
+				<h5>登录</h5>
+			</div>
+
 			<div class="card-body">
 				@include('shared._errors')
 
@@ -17,7 +21,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="password">密码：</label>
+						<label for="password">密码（<a href="{{ route('password.request') }}">忘记密码</a>）：</label>
 						<input type="password" name="password" class="form-control" value="{{ old('password') }}">
 					</div>
 
