@@ -30,7 +30,9 @@ class UserController extends Controller
 
     // 展示个人详情
     public function show(User $user){
-    	return view('users.show', compact('user'));
+    	$statuses = $user->statuses()->orderBy('created_at', 'desc')->paginate(30);
+
+    	return view('users.show', compact('user', 'statuses'));
     	// 如上的compact用法可以这样理解
     	// 寻找以compact括号内的参数（user）作为变量名的变量（$user），如果存在，则以此参数（user）作为数组键，此变量（$user）的值作为数组值
     	// return view('users.show', ['user' => $user]);
