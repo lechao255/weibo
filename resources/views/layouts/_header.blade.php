@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 	<div class="container">
-		<a href="{{ route('home') }}" class="navbar-brand">Weibo App</a>
+		<a href="{{ route('home') }}" class="navbar-brand">微博 · Radical-V</a>
 		<ul class="navbar-nav justify-content-end">
 			@if (Auth::check())
 				<li class="nav-item"><a href="{{ route('users.index') }}" class="nav-link">用户列表</a></li>
