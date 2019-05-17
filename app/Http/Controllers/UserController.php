@@ -11,7 +11,7 @@ use Mail;
 class UserController extends Controller
 {
 	public function __construct(){
-		$this->middleware('auth', ['except' => ['show', 'create', 'store', 'index', 'confimEmail']]);
+		$this->middleware('auth', ['except' => ['show', 'create', 'store', 'index', 'confimEmail', 'followings', 'followers']]);
 
 		$this->middleware('guest', ['only' => ['create']]);
 	}
@@ -123,5 +123,17 @@ class UserController extends Controller
     	Auth::login($user);
     	session()->flash('success', '恭喜您，激活成功！');
     	return redirect()->route('users.show', [$user]);
+    }
+
+    public function followings(User $user){
+    	$users = $user->followings()->paginate(30);
+    	$title = $user->name . '关注的人';
+    	return view('users.show_follow', compact('users', 'title'));
+    }
+
+    public function followers(User $user){
+    	$users = $user->followers()->paginate(30);
+    	$title = $user->name . '的粉丝';
+    	return view('users.show_follow', compact('users', 'title'));
     }
 }
