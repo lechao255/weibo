@@ -10,6 +10,10 @@
 						@include('shared._user_info', ['user' => $user])
 					</section>
 
+					<section class="stats mt-2">
+						@include('shared._stats', ['user' => $user])
+					</section>
+
 					<section class="status">
 						@if ($statuses->count() >0)
 						<ul class="list-unstyled">
